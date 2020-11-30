@@ -29,7 +29,7 @@ func (cmd *whoamiCommand) Feedback(profile *Profile, ui terminal.UI) error {
 		return ui.Print(terminal.NewTextLog("No user is currently logged in."))
 	}
 
-	// TODO(REALMC-7339): print details as table, remove TitledJSONDocument once implemented
+	// TODO(REALMC-7339): print details as table, remove titledJSONDocument once implemented
 	// kept it around for "bold text" pattern, which will now be used for table headers
 	return ui.Print(
 		terminal.NewTitledJSONLog(

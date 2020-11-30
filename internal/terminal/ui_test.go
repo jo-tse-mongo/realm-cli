@@ -31,7 +31,7 @@ func TestUIPrint(t *testing.T) {
 		} {
 			t.Run(tc.description, func(t *testing.T) {
 				out, err := new(bytes.Buffer), new(bytes.Buffer)
-				ui := terminal.NewUI(terminal.UIConfig{}, nil, out, err)
+				ui := terminal.NewUI(terminal.UIConfig{OutputFormat: terminal.DefaultOutputFormat}, nil, out, err)
 
 				tc.log.Time = mock.StaticTime
 				assert.Nil(t, ui.Print(tc.log))
