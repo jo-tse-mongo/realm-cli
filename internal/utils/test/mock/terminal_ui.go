@@ -34,7 +34,7 @@ func newUIConfig(options UIOptions) terminal.UIConfig {
 
 var (
 	// StaticTime represents a time.Time that displays the clock as 01:23:45.678
-	StaticTime = time.Date(1989, 6, 22, 1, 23, 45, 678_000_000, time.Local)
+	StaticTime = time.Date(1989, 6, 22, 1, 23, 45, 678_000_000, time.UTC)
 )
 
 type ui struct {
@@ -44,6 +44,7 @@ type ui struct {
 func (ui ui) Print(logs ...terminal.Log) error {
 	for i := range logs {
 		logs[i].Time = StaticTime
+		logs[i].TZ = time.UTC
 	}
 	return ui.UI.Print(logs...)
 }

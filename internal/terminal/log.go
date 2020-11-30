@@ -44,27 +44,28 @@ type LogData interface {
 type Log struct {
 	Level LogLevel
 	Time  time.Time
+	TZ    *time.Location
 	Data  LogData
 }
 
 // NewTextLog creates a new log with a text message
 func NewTextLog(message string) Log {
-	return Log{LogLevelInfo, time.Now(), textMessage(message)}
+	return Log{LogLevelInfo, time.Now(), time.Local, textMessage(message)}
 }
 
 // NewJSONLog creates a new log with a JSON document
 func NewJSONLog(data map[string]interface{}) Log {
-	return Log{LogLevelInfo, time.Now(), jsonDocument{data}}
+	return Log{LogLevelInfo, time.Now(), time.Local, jsonDocument{data}}
 }
 
 // NewTitledJSONLog creates a new log with a titled JSON document
 func NewTitledJSONLog(title string, data map[string]interface{}) Log {
-	return Log{LogLevelInfo, time.Now(), titledJSONDocument{title, jsonDocument{data}}}
+	return Log{LogLevelInfo, time.Now(), time.Local, titledJSONDocument{title, jsonDocument{data}}}
 }
 
 // NewErrorLog creates a new error log
 func NewErrorLog(err error) Log {
-	return Log{LogLevelError, time.Now(), errorMessage{err}}
+	return Log{LogLevelError, time.Now(), time.Local, errorMessage{err}}
 }
 
 // Print produces the log output based on the specified format
@@ -88,7 +89,7 @@ func (l Log) textLog() (string, error) {
 	return fmt.Sprintf(
 		fmt.Sprintf("%%-%ds", len(longestLogLevel)+1)+"%s: %s",
 		strings.ToUpper(string(l.Level)),
-		l.Time.In(time.Local).Format("15:04:05.000"),
+		l.Time.In(l.TZ).Format("15:04:05.000"),
 		message,
 	), nil
 }

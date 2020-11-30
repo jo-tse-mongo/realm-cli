@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/10gen/realm-cli/internal/terminal"
 	"github.com/10gen/realm-cli/internal/utils/test/assert"
@@ -34,6 +35,7 @@ func TestUIPrint(t *testing.T) {
 				ui := terminal.NewUI(terminal.UIConfig{OutputFormat: terminal.DefaultOutputFormat}, nil, out, err)
 
 				tc.log.Time = mock.StaticTime
+				tc.log.TZ = time.UTC
 				assert.Nil(t, ui.Print(tc.log))
 
 				assert.Equal(t, tc.expectedOut, out.String())

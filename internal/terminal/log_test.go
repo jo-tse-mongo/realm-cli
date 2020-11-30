@@ -47,8 +47,7 @@ func TestLogConstructor(t *testing.T) {
 		},
 	} {
 		t.Run(fmt.Sprintf("%s should create the expected Log", tc.ctor), func(t *testing.T) {
-
-			time.Sleep(1 * time.Millisecond)
+			time.Sleep(1 * time.Millisecond) // force tick
 			assert.True(t, time.Now().After(tc.log.Time), "now should be later than the log's timestamp")
 			assert.Equal(t, tc.expectedLevel, tc.log.Level)
 			assert.Equal(t, tc.exepctedData, tc.log.Data)
@@ -67,7 +66,7 @@ func TestLogMessage(t *testing.T) {
 			data:  textMessage("this is a test log"),
 			expectedOutputs: map[OutputFormat]string{
 				OutputFormatText: "INFO  07:54:00.000: this is a test log",
-				OutputFormatJSON: `{"level":"info","time":"1989-06-22T11:54:00Z","message":"this is a test log"}`,
+				OutputFormatJSON: `{"level":"info","time":"1989-06-22T07:54:00Z","message":"this is a test log"}`,
 			},
 		},
 		{
@@ -79,7 +78,7 @@ func TestLogMessage(t *testing.T) {
   "b": 1,
   "c": "sea"
 }`,
-				OutputFormatJSON: `{"level":"info","time":"1989-06-22T11:54:00Z","doc":{"a":true,"b":1,"c":"sea"}}`,
+				OutputFormatJSON: `{"level":"info","time":"1989-06-22T07:54:00Z","doc":{"a":true,"b":1,"c":"sea"}}`,
 			},
 		},
 		{
@@ -93,7 +92,7 @@ func TestLogMessage(t *testing.T) {
   "b": 1,
   "c": "sea"
 }`,
-				OutputFormatJSON: `{"level":"info","time":"1989-06-22T11:54:00Z","title":"Test Title","doc":{"a":true,"b":1,"c":"sea"}}`,
+				OutputFormatJSON: `{"level":"info","time":"1989-06-22T07:54:00Z","title":"Test Title","doc":{"a":true,"b":1,"c":"sea"}}`,
 			},
 		},
 		{
@@ -101,7 +100,7 @@ func TestLogMessage(t *testing.T) {
 			data:  errorMessage{errors.New("something bad happened")},
 			expectedOutputs: map[OutputFormat]string{
 				OutputFormatText: "ERROR 07:54:00.000: something bad happened",
-				OutputFormatJSON: `{"level":"error","time":"1989-06-22T11:54:00Z","err":"something bad happened"}`,
+				OutputFormatJSON: `{"level":"error","time":"1989-06-22T07:54:00Z","err":"something bad happened"}`,
 			},
 		},
 	} {
@@ -109,7 +108,8 @@ func TestLogMessage(t *testing.T) {
 			t.Run(fmt.Sprintf("With %s output format, %T should print the expected output", outputFormat, tc.data), func(t *testing.T) {
 				log := Log{
 					tc.level,
-					time.Date(1989, 6, 22, 11, 54, 0, 0, time.UTC),
+					time.Date(1989, 6, 22, 7, 54, 0, 0, time.UTC),
+					time.UTC,
 					tc.data,
 				}
 
@@ -123,7 +123,8 @@ func TestLogMessage(t *testing.T) {
 	t.Run("Should return an error with an unknown output format", func(t *testing.T) {
 		log := Log{
 			LogLevelInfo,
-			time.Date(1989, 6, 22, 11, 54, 0, 0, time.UTC),
+			time.Date(1989, 6, 22, 7, 54, 0, 0, time.UTC),
+			time.UTC,
 			textMessage("this is a test log"),
 		}
 
@@ -133,7 +134,7 @@ func TestLogMessage(t *testing.T) {
 
 	for _, tc := range []OutputFormat{OutputFormatText, OutputFormatJSON} {
 		t.Run(fmt.Sprintf("Should propagate an error that occurs while producing %s output", tc), func(t *testing.T) {
-			failLog := Log{LogLevelInfo, time.Now(), failMessage{}}
+			failLog := Log{LogLevelInfo, time.Now(), time.Local, failMessage{}}
 			_, err := failLog.Print(tc)
 			assert.Equal(t, errFailMessage, err)
 		})
