@@ -28,7 +28,7 @@ func newUIConfig(options UIOptions) terminal.UIConfig {
 
 	return terminal.UIConfig{
 		DisableColors: !options.UseColors,
-		OutputFormat:  outputFormat,
+		OutputFormat:  string(outputFormat),
 	}
 }
 

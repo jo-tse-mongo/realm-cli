@@ -40,7 +40,7 @@ type CommandDefinition struct {
 // CommandFactory is a command factory
 type CommandFactory struct {
 	Profile *Profile
-	Config  Config
+	Config  *Config
 }
 
 // Config is the global CLI config

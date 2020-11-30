@@ -18,7 +18,7 @@ type UI interface {
 // NewUI creates a new terminal UI
 func NewUI(config UIConfig, in io.Reader, out, err io.Writer) UI {
 	noColor := config.DisableColors
-	if config.OutputFormat == OutputFormatJSON {
+	if config.GetOutputFormat() == OutputFormatJSON {
 		noColor = true
 	}
 	color.NoColor = noColor
@@ -41,8 +41,12 @@ type ui struct {
 // UIConfig holds the global config for the CLI ui
 type UIConfig struct {
 	DisableColors bool
-	OutputFormat  OutputFormat
+	OutputFormat  string
 	OutputTarget  string
+}
+
+func (cfg UIConfig) GetOutputFormat() OutputFormat {
+	return OutputFormat(cfg.OutputFormat)
 }
 
 func (ui *ui) AskOne(prompt survey.Prompt, answer interface{}) error {
@@ -57,7 +61,7 @@ func (ui *ui) AskOne(prompt survey.Prompt, answer interface{}) error {
 
 func (ui *ui) Print(logs ...Log) error {
 	for _, log := range logs {
-		msg, msgErr := log.Message(ui.config.OutputFormat)
+		msg, msgErr := log.Message(ui.config.GetOutputFormat())
 		if msgErr != nil {
 			return msgErr
 		}

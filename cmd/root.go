@@ -7,6 +7,7 @@ import (
 	"github.com/10gen/realm-cli/internal/cli"
 	"github.com/10gen/realm-cli/internal/cloud/realm"
 	"github.com/10gen/realm-cli/internal/flags"
+	"github.com/10gen/realm-cli/internal/terminal"
 
 	"github.com/spf13/cobra"
 	"honnef.co/go/tools/version"
@@ -33,7 +34,7 @@ func Execute() {
 }
 
 func init() {
-	var config cli.Config
+	config := new(cli.Config)
 
 	profile, profileErr := cli.NewDefaultProfile()
 	if profileErr != nil {
@@ -48,7 +49,7 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&profile.Name, flags.Profile, flags.ProfileShort, cli.DefaultProfile, flags.ProfileUsage)
 	rootCmd.PersistentFlags().BoolVar(&config.UI.DisableColors, flags.DisableColors, false, flags.DisableColorsUsage)
-	rootCmd.PersistentFlags().Var(&config.UI.OutputFormat, flags.OutputFormat, flags.OutputFormatUsage)
+	rootCmd.PersistentFlags().StringVar(&config.UI.OutputFormat, flags.OutputFormat, terminal.DefaultOutputFormat, flags.OutputFormatUsage)
 	rootCmd.PersistentFlags().StringVar(&config.UI.OutputTarget, flags.OutputTarget, "", flags.OutputTargetUsage)
 	rootCmd.PersistentFlags().StringVar(&config.Command.RealmBaseURL, flags.RealmBaseURL, realm.DefaultBaseURL, flags.RealmBaseURLUsage)
 
