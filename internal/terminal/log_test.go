@@ -19,38 +19,38 @@ func TestLogConstructor(t *testing.T) {
 		ctor          string
 		log           Log
 		expectedLevel LogLevel
-		exepctedData  LogData
+		expectedData  LogData
 	}{
 		{
 			ctor:          "NewTextLog",
 			log:           NewTextLog("oh yeah"),
 			expectedLevel: LogLevelInfo,
-			exepctedData:  textMessage("oh yeah"),
+			expectedData:  textMessage("oh yeah"),
 		},
 		{
 			ctor:          "NewJSONLog",
 			log:           NewJSONLog(map[string]interface{}{"a": "ayyy"}),
 			expectedLevel: LogLevelInfo,
-			exepctedData:  jsonDocument{map[string]interface{}{"a": "ayyy"}},
+			expectedData:  jsonDocument{map[string]interface{}{"a": "ayyy"}},
 		},
 		{
 			ctor:          "NewTitledJSONLog",
 			log:           NewTitledJSONLog("Test Title", map[string]interface{}{"a": "ayyy"}),
 			expectedLevel: LogLevelInfo,
-			exepctedData:  titledJSONDocument{"Test Title", jsonDocument{map[string]interface{}{"a": "ayyy"}}},
+			expectedData:  titledJSONDocument{"Test Title", jsonDocument{map[string]interface{}{"a": "ayyy"}}},
 		},
 		{
 			ctor:          "NewErrorLog",
 			log:           NewErrorLog(errors.New("oh noz")),
 			expectedLevel: LogLevelError,
-			exepctedData:  errorMessage{errors.New("oh noz")},
+			expectedData:  errorMessage{errors.New("oh noz")},
 		},
 	} {
 		t.Run(fmt.Sprintf("%s should create the expected Log", tc.ctor), func(t *testing.T) {
 			time.Sleep(1 * time.Millisecond) // force tick
 			assert.True(t, time.Now().After(tc.log.Time), "now should be later than the log's timestamp")
 			assert.Equal(t, tc.expectedLevel, tc.log.Level)
-			assert.Equal(t, tc.exepctedData, tc.log.Data)
+			assert.Equal(t, tc.expectedData, tc.log.Data)
 		})
 	}
 }

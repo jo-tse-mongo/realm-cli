@@ -23,11 +23,9 @@ var (
 
 	longestLogLevel = func() LogLevel {
 		var longest LogLevel
-		var longestLength int
 		for _, level := range allLogLevels {
-			if l := len(level); l > longestLength {
+			if l := len(level); l > len(longest) {
 				longest = level
-				longestLength = l
 			}
 		}
 		return longest
