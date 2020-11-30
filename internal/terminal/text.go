@@ -6,6 +6,6 @@ type TextMessage struct {
 }
 
 // Message returns a text message
-func (t TextMessage) Message() (string, error) {
+func (t TextMessage) Message(outputFormat OutputFormat) (string, error) {
 	return t.Contents, nil
 }
