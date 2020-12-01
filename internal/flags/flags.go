@@ -31,6 +31,6 @@ const (
 
 	AutoConfirmUsage   = "this is the --yes, -y usage"
 	DisableColorsUsage = "this is the --disable-colors usage"
-	OutputFormatUsage  = "this is the --output-format usage"
+	OutputFormatUsage  = "formats the output specified by type"
 	OutputTargetUsage  = "this is the --output-target usage"
 )
