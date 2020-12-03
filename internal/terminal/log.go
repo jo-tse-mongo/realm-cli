@@ -60,6 +60,11 @@ func NewTitledJSONLog(title string, data map[string]interface{}) Log {
 	return Log{LogLevelInfo, time.Now(), titledJSONDocument{title, jsonDocument{data}}}
 }
 
+// NewTableLog creates a new Log with a Table value
+func NewTableLog(headers []string, values []map[string]string) Log {
+	return Log{LogLevelInfo, time.Now(),  newTable(headers, values)}
+}
+
 // NewErrorLog creates a new error log
 func NewErrorLog(err error) Log {
 	return Log{LogLevelError, time.Now(), errorMessage{err}}
@@ -70,7 +75,7 @@ func (l Log) Print(outputFormat OutputFormat) (string, error) {
 	switch outputFormat {
 	case OutputFormatText:
 		return l.textLog()
-	case OutputFormatJSON:
+	case OutputFormatJSON, OutputFormatTable:
 		return l.jsonOutput()
 	default:
 		return "", fmt.Errorf("unsupported output format type: %s", outputFormat)

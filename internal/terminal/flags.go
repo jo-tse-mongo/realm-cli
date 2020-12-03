@@ -34,11 +34,13 @@ func (of *OutputFormat) Set(val string) error {
 const (
 	OutputFormatText OutputFormat = "" // zero-valued to be flag's default
 	OutputFormatJSON OutputFormat = "json"
+	OutputFormatTable OutputFormat = "table"
 )
 
 func isValidOutputFormat(outputFormat OutputFormat) bool {
 	switch outputFormat {
 	case
+		OutputFormatTable,
 		OutputFormatJSON,
 		OutputFormatText:
 		return true
